@@ -198,7 +198,7 @@
             
               <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
             
-            Home
+            Startseite
           </a>
         </li>
       
@@ -221,6 +221,343 @@
           <div id="content" class="content">
             
   <section id="posts" class="posts-expand">
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/08/27/SpringBoot【1】-Hello-Springboot/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="来自魔法世界的王新华">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Tech Art">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/08/27/SpringBoot【1】-Hello-Springboot/" itemprop="url">SpringBoot【1】--Hello Springboot</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Veröffentlicht am</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-08-27T23:48:19+08:00">
+                2017-08-27
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">in</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/SpringBoot/" itemprop="url" rel="index">
+                    <span itemprop="name">SpringBoot</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>用过Weblogic的再用JBoss，会觉得JBoss轻多了，搞一个简单的单体Web应用没必要集成包括EJB在内的那么多功能，而且安装部署方便多了，还可以裁剪太棒了。嗯……等用了Apache Tomcat之后，又回觉得，嗯……这个不错，体积小、安装部署快，虽然看起来没有那么系统化，但在Spring以及其他很多开源框架和工具的作用下，依然可以提供EJB、ESB、SOA等等这些能力，可定制化很高，加之Maven的辅助，熟练之后也很方便。你甚至会觉得Tomcat已经够简单够轻量了。</p>
+<p>咳咳，等用了SpringBoot之后，你会惊叹：擦！Web应用还能这么玩儿？一个Main函数就够了？Web容器呢？Deploy过程呢？</p>
+<p>当然，Web容器还是有的，只不过被内嵌使用了，SpringBoot帮你简化了配置、部署。你的代码中只需要提供一个main函数，简单的配置文件或配置类，与Maven配合，即可高度定制化你的Web应用组件，从开发到部署就一个字<strong>快</strong>！这俨然类似于NodeJs。这就是我对SpringBoot的简单总结。</p>
+<p>至于SpringBoot更准确和全面的介绍还是请参看SpringBoot的官方网站：<a href="http://projects.spring.io/spring-boot/" target="_blank" rel="external">http://projects.spring.io/spring-boot/</a></p>
+<p>那么为什么会有SpringBoot呢？这个有很多种解释，自己可以百度或自行脑补。</p>
+<h1 id="准备"><a href="#准备" class="headerlink" title="准备"></a>准备</h1><p>##1. 需要准备的工具：</p>
+<ol>
+<li>开发IDE：Eclipse。<code>鄙人比较low，目前还不习惯 Intellij，还是先用eclipse吧。</code></li>
+<li>项目管理工具：Maven；</li>
+<li>GitHub项目地址：</li>
+</ol>
+<h2 id="2-需要准备的概念"><a href="#2-需要准备的概念" class="headerlink" title="2. 需要准备的概念"></a>2. 需要准备的概念</h2><ol>
+<li>Web容器、嵌入式Web容器；</li>
+<li>Maven的坐标：GAV概念；</li>
+<li>SpringFramework</li>
+</ol>
+<h1 id="开始"><a href="#开始" class="headerlink" title="开始"></a>开始</h1><h2 id="步骤1-配置Eclipse与Maven"><a href="#步骤1-配置Eclipse与Maven" class="headerlink" title="步骤1 配置Eclipse与Maven"></a>步骤1 配置Eclipse与Maven</h2><ol>
+<li>从Maven官网下载并安装配置Maven，<code>注：下载Maven v3.x的</code>；</li>
+<li>配置好Maven的中央仓库，以便获取Java软件包；</li>
+<li>下载安装Eclipse的Maven插件 m2Eclipse；</li>
+<li>配置Eclipse的m2Eclipse插件；</li>
+<li>创建一个Maven工程，通过 mvn clean/mvn compile/mvn package/mvn test/mvn install测试是否能正常使用Maven，这样还能初始化一下Maven，下载好必备的软件包。</li>
+</ol>
+<p>以上步骤的具体过程，百度一大把，这里就不细说了。补充，如果觉得中央仓库太慢了，自己搭建一个Nexus创建一个自己的中央仓库，回头有时间，我会记录一个较为完整的Nexus搭建过程，温习一下。</p>
+<h2 id="步骤2-创建Maven工程并配置POM文件"><a href="#步骤2-创建Maven工程并配置POM文件" class="headerlink" title="步骤2 创建Maven工程并配置POM文件"></a>步骤2 创建Maven工程并配置POM文件</h2><h2 id="步骤3-配置SpringBoot"><a href="#步骤3-配置SpringBoot" class="headerlink" title="步骤3 配置SpringBoot"></a>步骤3 配置SpringBoot</h2><h2 id="步骤4-跑起来"><a href="#步骤4-跑起来" class="headerlink" title="步骤4 跑起来"></a>步骤4 跑起来</h2><h1 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h1><p>接下来，看看SpringBoot怎么集成JSP。</p>
+<p>时间原因本文未完待续……</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/08/27/当前的打算/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="来自魔法世界的王新华">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Tech Art">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/08/27/当前的打算/" itemprop="url">当前的打算</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Veröffentlicht am</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-08-27T23:29:01+08:00">
+                2017-08-27
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">in</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/计划/" itemprop="url" rel="index">
+                    <span itemprop="name">计划</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>记录自己不断变化更新的目标。最近越来越健忘，担心自己忘了目标，丢了初心。</p>
+<h1 id="具体目标"><a href="#具体目标" class="headerlink" title="具体目标"></a>具体目标</h1><ol>
+<li><p>深入学习 Spring Boot；</p>
+<p>能够快速应用，熟悉其内在结构、设计思路、应用场景以及配套组合。</p>
+</li>
+<li><p>深入学习 Kafka；</p>
+<p>能够快速应用，全面了解其生态形式，同类产品的利弊特点，内部构造，设计思路。</p>
+</li>
+<li><p>深入学习 Java 虚拟机；</p>
+<p>能够在解决Java性能问题上能够得到更多的启示，能够对Java应用的开发得到更多的指导。</p>
+</li>
+<li><p>深入学习Redis；</p>
+<p>阅读其源码，要搞明白这东西为什么这么受欢迎。</p>
+</li>
+<li><p>初步学习React、ES6、NodeJs</p>
+<p>JavaScript将越来越成为这个世界不可或缺的一部分，要跟上节奏啊。通过Hexo的使用，觉得自己改好好反省一下。</p>
+</li>
+<li><p>记录自己的学习过程；</p>
+<p>督促自己、分享他人。</p>
+</li>
+<li><p>记录自己的Demo项目过程；</p>
+<p>学以致用、实战中摸爬滚打、精炼自己的所学。</p>
+</li>
+<li><p>尝试使用go。</p>
+<p>go lang 是未来，自己的Demo项目能不能用go重构呢？非常好奇！</p>
+</li>
+</ol>
+<h1 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h1><p>以上目标有具体要求描述，但没有单独设立时间，因为在我看来他们相互之间有很多联系，同步学习是有必要的。决定以项目目标为主线，层层学习，所以对它们定义一个整体的时间表：希望自己在半年内能够对它们融会贯通，有一个较为全面的认识。然后每一项再单独发现难点各个击破。</p>
+<p>有时间表的目标才能算有效的目标，希望自己能够说到做到！加油！</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
     
       
 
@@ -264,7 +601,7 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">Posted on</span>
+                <span class="post-meta-item-text">Veröffentlicht am</span>
               
               <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-08-25T22:16:47+08:00">
                 2017-08-25
@@ -285,7 +622,7 @@
                 <i class="fa fa-folder-o"></i>
               </span>
               
-                <span class="post-meta-item-text">In</span>
+                <span class="post-meta-item-text">in</span>
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
@@ -448,7 +785,7 @@
 <p>之后会陆续介绍如何使用Hexo将博客发布到github page、如何集成评论功能、如何等内容。</p>
 </li>
 </ol>
-<h2 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h2><p>以前一直在传说中对NodeJs有所了解，没有切实使用过，现在因为Hexo初步感受了一下NodeJs，知道了为什么NodeJs能迅速发展。它的npm就是其中一个非常好的理由，使用起来就像brew、apt-get，能够帮助你构建有关于NodeJs应用，同时也能够方便你将自己的应用共享。虽然在Java的世界中有像Maven这样下载组件和共享成果的工具与生态圈，但相比于npm的方便性比较还是相差很远，至少maven并不能下载到直接可以执行的命令行工具。也许是我孤陋寡闻，但是如果有类似于“jpm”这样的工具就太好了。</p>
+<h1 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h1><p>以前一直在传说中对NodeJs有所了解，没有切实使用过，现在因为Hexo初步感受了一下NodeJs，知道了为什么NodeJs能迅速发展。它的npm就是其中一个非常好的理由，使用起来就像brew、apt-get，能够帮助你构建有关于NodeJs应用，同时也能够方便你将自己的应用共享。虽然在Java的世界中有像Maven这样下载组件和共享成果的工具与生态圈，但相比于npm的方便性比较还是相差很远，至少maven并不能下载到直接可以执行的命令行工具。也许是我孤陋寡闻，但是如果有类似于“jpm”这样的工具就太好了。</p>
 
           
         
@@ -526,7 +863,7 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">Posted on</span>
+                <span class="post-meta-item-text">Veröffentlicht am</span>
               
               <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-08-25T00:27:29+08:00">
                 2017-08-25
@@ -547,7 +884,7 @@
                 <i class="fa fa-folder-o"></i>
               </span>
               
-                <span class="post-meta-item-text">In</span>
+                <span class="post-meta-item-text">in</span>
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
@@ -685,7 +1022,7 @@ gitment.render('container')
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">Posted on</span>
+                <span class="post-meta-item-text">Veröffentlicht am</span>
               
               <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-08-25T00:11:21+08:00">
                 2017-08-25
@@ -819,8 +1156,8 @@ gitment.render('container')
             
               <a href="/archives">
             
-                <span class="site-state-item-count">3</span>
-                <span class="site-state-item-name">posts</span>
+                <span class="site-state-item-count">5</span>
+                <span class="site-state-item-name">Artikel</span>
               </a>
             </div>
           
@@ -830,8 +1167,8 @@ gitment.render('container')
             
             <div class="site-state-item site-state-categories">
               
-                <span class="site-state-item-count">2</span>
-                <span class="site-state-item-name">categories</span>
+                <span class="site-state-item-count">4</span>
+                <span class="site-state-item-name">Kategorien</span>
               
             </div>
           
@@ -842,7 +1179,7 @@ gitment.render('container')
             <div class="site-state-item site-state-tags">
               
                 <span class="site-state-item-count">6</span>
-                <span class="site-state-item-name">tags</span>
+                <span class="site-state-item-name">Tags</span>
               
             </div>
           
@@ -893,7 +1230,7 @@ gitment.render('container')
 </div>
 
 
-  <div class="powered-by">Powered by <a class="theme-link" href="https://hexo.io">Hexo</a></div>
+  <div class="powered-by">Erstellt mit  <a class="theme-link" href="https://hexo.io">Hexo</a></div>
 
   <span class="post-meta-divider">|</span>
 
