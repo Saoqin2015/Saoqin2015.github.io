@@ -102,7 +102,7 @@
 <meta property="og:site_name" content="Tech Art">
 <meta property="og:description" content="前言用过Weblogic的再用JBoss，会觉得JBoss轻多了，搞一个简单的单体Web应用没必要集成包括EJB在内的那么多功能，而且安装部署方便多了，还可以裁剪太棒了。嗯……等用了Apache Tomcat之后，又回觉得，嗯……这个不错，体积小、安装部署快，虽然看起来没有那么系统化，但在Spring以及其他很多开源框架和工具的作用下，依然可以提供EJB、ESB、SOA等等这些能力，可定制化很高，">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2017-09-01T18:03:59.000Z">
+<meta property="og:updated_time" content="2017-09-01T18:54:33.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="SpringBoot【1】--Hello Springboot">
 <meta name="twitter:description" content="前言用过Weblogic的再用JBoss，会觉得JBoss轻多了，搞一个简单的单体Web应用没必要集成包括EJB在内的那么多功能，而且安装部署方便多了，还可以裁剪太棒了。嗯……等用了Apache Tomcat之后，又回觉得，嗯……这个不错，体积小、安装部署快，虽然看起来没有那么系统化，但在Spring以及其他很多开源框架和工具的作用下，依然可以提供EJB、ESB、SOA等等这些能力，可定制化很高，">
@@ -201,7 +201,7 @@
             
               <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
             
-            Startseite
+            Home
           </a>
         </li>
       
@@ -265,7 +265,7 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">Veröffentlicht am</span>
+                <span class="post-meta-item-text">Posted on</span>
               
               <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-08-27T23:48:19+08:00">
                 2017-08-27
@@ -286,7 +286,7 @@
                 <i class="fa fa-folder-o"></i>
               </span>
               
-                <span class="post-meta-item-text">in</span>
+                <span class="post-meta-item-text">In</span>
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
@@ -387,8 +387,7 @@
 <p>spring-boot刚启动就趴下了，百度了一圈，给的答案是加入了如下有关嵌入式tomcat的依赖，依然没有解决问题：</p>
 <figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-tomcat<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></div></pre></td></tr></table></figure>
 <p>才疏学浅啊，始终没有找到解决方案。内嵌式的tomcat是spring-boot默认会引入的依赖，且是默认使用的web容器，为何会出现这个问题呢？估计是依赖包问题，实在太困了，不想去一个一个检查依赖关系。猜测可能是引用的spring-boot版本的问题。于是将spring-boot的版本换成了1.2.6，尝试了一次，果然成功了！</p>
-<p>##3. 稍微定位一下根因</p>
-<p>WTF官网的样例有问题？不可能吧，作为专业的开源社区、开源产品来说，不可能有这样的疏漏吧！这么明显的问题都没有测过就能放上来？</p>
+<h2 id="3-稍微定位一下根因"><a href="#3-稍微定位一下根因" class="headerlink" title="3. 稍微定位一下根因"></a>3. 稍微定位一下根因</h2><p>WTF官网的样例有问题？不可能吧，作为专业的开源社区、开源产品来说，不可能有这样的疏漏吧！这么明显的问题都没有测过就能放上来？</p>
 <p>会不会是我的maven内部在解释依赖关系的时候把很多包都给下载错了？突然想起来，自己一直在用eclipse内嵌的maven，没有重新配置为本地maven。于是又做了三件事来验证：</p>
 <ol>
 <li>下载一个独立的maven，并配置eclipse的maven插件；</li>
@@ -508,10 +507,10 @@
       
         <ul class="sidebar-nav motion-element">
           <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
-            Inhaltsverzeichnis
+            Table of Contents
           </li>
           <li class="sidebar-nav-overview" data-target="site-overview">
-            Übersicht
+            Overview
           </li>
         </ul>
       
@@ -534,7 +533,7 @@
               <a href="/archives">
             
                 <span class="site-state-item-count">5</span>
-                <span class="site-state-item-name">Artikel</span>
+                <span class="site-state-item-name">posts</span>
               </a>
             </div>
           
@@ -545,7 +544,7 @@
             <div class="site-state-item site-state-categories">
               
                 <span class="site-state-item-count">4</span>
-                <span class="site-state-item-name">Kategorien</span>
+                <span class="site-state-item-name">categories</span>
               
             </div>
           
@@ -556,7 +555,7 @@
             <div class="site-state-item site-state-tags">
               
                 <span class="site-state-item-count">6</span>
-                <span class="site-state-item-name">Tags</span>
+                <span class="site-state-item-name">tags</span>
               
             </div>
           
@@ -590,7 +589,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#准备"><span class="nav-number">2.</span> <span class="nav-text">准备</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-需要准备的工具："><span class="nav-number">2.1.</span> <span class="nav-text">1. 需要准备的工具：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-需要准备的概念"><span class="nav-number">2.2.</span> <span class="nav-text">2. 需要准备的概念</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#开始"><span class="nav-number">3.</span> <span class="nav-text">开始</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#步骤1-配置Eclipse与Maven"><span class="nav-number">3.1.</span> <span class="nav-text">步骤1 配置Eclipse与Maven</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#步骤2-创建Maven工程并配置POM文件"><span class="nav-number">3.2.</span> <span class="nav-text">步骤2 创建Maven工程并配置POM文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#步骤3-添加样例类"><span class="nav-number">3.3.</span> <span class="nav-text">步骤3 添加样例类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#步骤4-跑起来"><span class="nav-number">3.4.</span> <span class="nav-text">步骤4 跑起来</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#踩过的坑"><span class="nav-number">4.</span> <span class="nav-text">踩过的坑</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-初始化Log组件失败"><span class="nav-number">4.1.</span> <span class="nav-text">1. 初始化Log组件失败</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-Spring-Boot-莫名的shutdown"><span class="nav-number">4.2.</span> <span class="nav-text">2. Spring-Boot 莫名的shutdown</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#结语"><span class="nav-number">5.</span> <span class="nav-text">结语</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#经验教训"><span class="nav-number">5.1.</span> <span class="nav-text">经验教训</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#需要改进的地方"><span class="nav-number">5.2.</span> <span class="nav-text">需要改进的地方</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#关于Spring-boot"><span class="nav-number">5.3.</span> <span class="nav-text">关于Spring-boot</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#接下来"><span class="nav-number">5.4.</span> <span class="nav-text">接下来</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#准备"><span class="nav-number">2.</span> <span class="nav-text">准备</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-需要准备的工具："><span class="nav-number">2.1.</span> <span class="nav-text">1. 需要准备的工具：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-需要准备的概念"><span class="nav-number">2.2.</span> <span class="nav-text">2. 需要准备的概念</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#开始"><span class="nav-number">3.</span> <span class="nav-text">开始</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#步骤1-配置Eclipse与Maven"><span class="nav-number">3.1.</span> <span class="nav-text">步骤1 配置Eclipse与Maven</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#步骤2-创建Maven工程并配置POM文件"><span class="nav-number">3.2.</span> <span class="nav-text">步骤2 创建Maven工程并配置POM文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#步骤3-添加样例类"><span class="nav-number">3.3.</span> <span class="nav-text">步骤3 添加样例类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#步骤4-跑起来"><span class="nav-number">3.4.</span> <span class="nav-text">步骤4 跑起来</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#踩过的坑"><span class="nav-number">4.</span> <span class="nav-text">踩过的坑</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-初始化Log组件失败"><span class="nav-number">4.1.</span> <span class="nav-text">1. 初始化Log组件失败</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-Spring-Boot-莫名的shutdown"><span class="nav-number">4.2.</span> <span class="nav-text">2. Spring-Boot 莫名的shutdown</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-稍微定位一下根因"><span class="nav-number">4.3.</span> <span class="nav-text">3. 稍微定位一下根因</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#结语"><span class="nav-number">5.</span> <span class="nav-text">结语</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#经验教训"><span class="nav-number">5.1.</span> <span class="nav-text">经验教训</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#需要改进的地方"><span class="nav-number">5.2.</span> <span class="nav-text">需要改进的地方</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#关于Spring-boot"><span class="nav-number">5.3.</span> <span class="nav-text">关于Spring-boot</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#接下来"><span class="nav-number">5.4.</span> <span class="nav-text">接下来</span></a></li></ol></li></ol></div>
             
 
           </div>
@@ -623,7 +622,7 @@
 </div>
 
 
-  <div class="powered-by">Erstellt mit  <a class="theme-link" href="https://hexo.io">Hexo</a></div>
+  <div class="powered-by">Powered by <a class="theme-link" href="https://hexo.io">Hexo</a></div>
 
   <span class="post-meta-divider">|</span>
 

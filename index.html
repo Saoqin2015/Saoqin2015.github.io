@@ -198,7 +198,7 @@
             
               <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
             
-            Startseite
+            Home
           </a>
         </li>
       
@@ -264,7 +264,7 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">Veröffentlicht am</span>
+                <span class="post-meta-item-text">Posted on</span>
               
               <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-08-27T23:48:19+08:00">
                 2017-08-27
@@ -285,7 +285,7 @@
                 <i class="fa fa-folder-o"></i>
               </span>
               
-                <span class="post-meta-item-text">in</span>
+                <span class="post-meta-item-text">In</span>
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
@@ -388,8 +388,7 @@
 <p>spring-boot刚启动就趴下了，百度了一圈，给的答案是加入了如下有关嵌入式tomcat的依赖，依然没有解决问题：</p>
 <figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-tomcat<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></div></pre></td></tr></table></figure>
 <p>才疏学浅啊，始终没有找到解决方案。内嵌式的tomcat是spring-boot默认会引入的依赖，且是默认使用的web容器，为何会出现这个问题呢？估计是依赖包问题，实在太困了，不想去一个一个检查依赖关系。猜测可能是引用的spring-boot版本的问题。于是将spring-boot的版本换成了1.2.6，尝试了一次，果然成功了！</p>
-<p>##3. 稍微定位一下根因</p>
-<p>WTF官网的样例有问题？不可能吧，作为专业的开源社区、开源产品来说，不可能有这样的疏漏吧！这么明显的问题都没有测过就能放上来？</p>
+<h2 id="3-稍微定位一下根因"><a href="#3-稍微定位一下根因" class="headerlink" title="3. 稍微定位一下根因"></a>3. 稍微定位一下根因</h2><p>WTF官网的样例有问题？不可能吧，作为专业的开源社区、开源产品来说，不可能有这样的疏漏吧！这么明显的问题都没有测过就能放上来？</p>
 <p>会不会是我的maven内部在解释依赖关系的时候把很多包都给下载错了？突然想起来，自己一直在用eclipse内嵌的maven，没有重新配置为本地maven。于是又做了三件事来验证：</p>
 <ol>
 <li>下载一个独立的maven，并配置eclipse的maven插件；</li>
@@ -496,7 +495,7 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">Veröffentlicht am</span>
+                <span class="post-meta-item-text">Posted on</span>
               
               <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-08-27T23:29:01+08:00">
                 2017-08-27
@@ -517,7 +516,7 @@
                 <i class="fa fa-folder-o"></i>
               </span>
               
-                <span class="post-meta-item-text">in</span>
+                <span class="post-meta-item-text">In</span>
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
@@ -666,7 +665,7 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">Veröffentlicht am</span>
+                <span class="post-meta-item-text">Posted on</span>
               
               <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-08-25T22:16:47+08:00">
                 2017-08-25
@@ -687,7 +686,7 @@
                 <i class="fa fa-folder-o"></i>
               </span>
               
-                <span class="post-meta-item-text">in</span>
+                <span class="post-meta-item-text">In</span>
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
@@ -928,7 +927,7 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">Veröffentlicht am</span>
+                <span class="post-meta-item-text">Posted on</span>
               
               <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-08-25T00:27:29+08:00">
                 2017-08-25
@@ -949,7 +948,7 @@
                 <i class="fa fa-folder-o"></i>
               </span>
               
-                <span class="post-meta-item-text">in</span>
+                <span class="post-meta-item-text">In</span>
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
@@ -1087,7 +1086,7 @@ gitment.render('container')
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">Veröffentlicht am</span>
+                <span class="post-meta-item-text">Posted on</span>
               
               <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-08-25T00:11:21+08:00">
                 2017-08-25
@@ -1222,7 +1221,7 @@ gitment.render('container')
               <a href="/archives">
             
                 <span class="site-state-item-count">5</span>
-                <span class="site-state-item-name">Artikel</span>
+                <span class="site-state-item-name">posts</span>
               </a>
             </div>
           
@@ -1233,7 +1232,7 @@ gitment.render('container')
             <div class="site-state-item site-state-categories">
               
                 <span class="site-state-item-count">4</span>
-                <span class="site-state-item-name">Kategorien</span>
+                <span class="site-state-item-name">categories</span>
               
             </div>
           
@@ -1244,7 +1243,7 @@ gitment.render('container')
             <div class="site-state-item site-state-tags">
               
                 <span class="site-state-item-count">6</span>
-                <span class="site-state-item-name">Tags</span>
+                <span class="site-state-item-name">tags</span>
               
             </div>
           
@@ -1295,7 +1294,7 @@ gitment.render('container')
 </div>
 
 
-  <div class="powered-by">Erstellt mit  <a class="theme-link" href="https://hexo.io">Hexo</a></div>
+  <div class="powered-by">Powered by <a class="theme-link" href="https://hexo.io">Hexo</a></div>
 
   <span class="post-meta-divider">|</span>
 
