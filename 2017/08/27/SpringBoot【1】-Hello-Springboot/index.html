@@ -102,7 +102,7 @@
 <meta property="og:site_name" content="Tech Art">
 <meta property="og:description" content="前言用过Weblogic的再用JBoss，会觉得JBoss轻多了，搞一个简单的单体Web应用没必要集成包括EJB在内的那么多功能，而且安装部署方便多了，还可以裁剪太棒了。嗯……等用了Apache Tomcat之后，又回觉得，嗯……这个不错，体积小、安装部署快，虽然看起来没有那么系统化，但在Spring以及其他很多开源框架和工具的作用下，依然可以提供EJB、ESB、SOA等等这些能力，可定制化很高，">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2017-09-01T16:55:01.000Z">
+<meta property="og:updated_time" content="2017-09-01T17:01:42.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="SpringBoot【1】--Hello Springboot">
 <meta name="twitter:description" content="前言用过Weblogic的再用JBoss，会觉得JBoss轻多了，搞一个简单的单体Web应用没必要集成包括EJB在内的那么多功能，而且安装部署方便多了，还可以裁剪太棒了。嗯……等用了Apache Tomcat之后，又回觉得，嗯……这个不错，体积小、安装部署快，虽然看起来没有那么系统化，但在Spring以及其他很多开源框架和工具的作用下，依然可以提供EJB、ESB、SOA等等这些能力，可定制化很高，">
@@ -332,8 +332,7 @@
 <p>当然，Web容器还是有的，只不过被内嵌使用了，SpringBoot帮你简化了配置、部署。你的代码中只需要提供一个main函数，简单的配置文件或配置类，与Maven配合，即可高度定制化你的Web应用组件，从开发到部署就一个字<strong>快</strong>！这俨然类似于NodeJs。这就是我对SpringBoot的简单总结。</p>
 <p>至于SpringBoot更准确和全面的介绍还是请参看SpringBoot的官方网站：<a href="http://projects.spring.io/spring-boot/" target="_blank" rel="external">http://projects.spring.io/spring-boot/</a></p>
 <p>那么为什么会有SpringBoot呢？这个有很多种解释，自己可以百度或自行脑补。</p>
-<h1 id="准备"><a href="#准备" class="headerlink" title="准备"></a>准备</h1><p>##1. 需要准备的工具：</p>
-<ol>
+<h1 id="准备"><a href="#准备" class="headerlink" title="准备"></a>准备</h1><h2 id="1-需要准备的工具："><a href="#1-需要准备的工具：" class="headerlink" title="1. 需要准备的工具："></a>1. 需要准备的工具：</h2><ol>
 <li>开发IDE：Eclipse。<code>鄙人比较low，目前还不习惯 Intellij，还是先用eclipse吧。</code></li>
 <li>项目管理工具：Maven；</li>
 <li>GitHub项目地址：</li>
@@ -382,8 +381,7 @@
 <p>然后会在浏览器中看到这样的结果：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&#123;&quot;userName&quot;:&quot;superman&quot;,&quot;userId&quot;:&quot;0b527b83-9157-4805-9945-4931d9a8693f&quot;,&quot;userAge&quot;:18&#125;</div></pre></td></tr></table></figure>
 <p>#踩过的坑</p>
-<p>##1. 初始化Log组件失败</p>
-<p>其实整个过程只需要按照spring官网有关spring-boot部分的指导进行就可以了。可是… 就当我按照如上操作完成配置和示例类编写之后，满怀期待的启动了spring-boot的时候，出现了ClassNotFoundException的异常，这个找不到的类：ch.qos.logback.classic.turbo.TurboFilter。然后用Command+Shift+T搜索了一下这个类，能找到啊！仔细看了一下报错信息，是Spring-boot启动的时候加载bean的时候报错。可是明明已经添加依赖了啊。百度了一圈，手动增加了相关依赖，貌似解决问题了，spring-boot启动的时候不再报错了。</p>
+<h2 id="1-初始化Log组件失败"><a href="#1-初始化Log组件失败" class="headerlink" title="1. 初始化Log组件失败"></a>1. 初始化Log组件失败</h2><p>其实整个过程只需要按照spring官网有关spring-boot部分的指导进行就可以了。可是… 就当我按照如上操作完成配置和示例类编写之后，满怀期待的启动了spring-boot的时候，出现了ClassNotFoundException的异常，这个找不到的类：ch.qos.logback.classic.turbo.TurboFilter。然后用Command+Shift+T搜索了一下这个类，能找到啊！仔细看了一下报错信息，是Spring-boot启动的时候加载bean的时候报错。可是明明已经添加依赖了啊。百度了一圈，手动增加了相关依赖，貌似解决问题了，spring-boot启动的时候不再报错了。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">&lt;dependency&gt;</div><div class="line">	&lt;groupId&gt;ch.qos.logback&lt;/groupId&gt;</div><div class="line">	&lt;artifactId&gt;logback-classic&lt;/artifactId&gt;</div><div class="line">	&lt;version&gt;1.2.3&lt;/version&gt;</div><div class="line">&lt;/dependency&gt;</div></pre></td></tr></table></figure>
 <h2 id="2-Spring-Boot-莫名的shutdown"><a href="#2-Spring-Boot-莫名的shutdown" class="headerlink" title="2. Spring-Boot 莫名的shutdown"></a>2. Spring-Boot 莫名的shutdown</h2><p>解决了日志组件的问题，以为能够成功启动了，结果是这个样子的：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">2017-05-07 23:43:21.593  INFO 19130 --- [           main] com.hommin.GirlApplication               : Starting GirlApplication on lihongmindembp with PID 19130 (/Users/hommin/Documents/workspace/girl/target/classes started by Hommin in /Users/hommin/Documents/workspace/girl)</div><div class="line">2017-05-07 23:43:21.605  INFO 19130 --- [           main] com.hommin.GirlApplication               : No active profile set, falling back to default profiles: default</div><div class="line">2017-05-07 23:43:21.733  INFO 19130 --- [           main] s.c.a.AnnotationConfigApplicationContext : Refreshing org.springframework.context.annotation.AnnotationConfigApplicationContext@7863cfc6: startup date [Sun May 07 23:43:21 CST 2017]; root of context hierarchy</div><div class="line">2017-05-07 23:43:23.131  INFO 19130 --- [           main] o.s.j.e.a.AnnotationMBeanExporter        : Registering beans for JMX exposure on startup</div><div class="line">2017-05-07 23:43:23.145  INFO 19130 --- [           main] com.hommin.GirlApplication               : Started GirlApplication in 2.277 seconds (JVM running for 2.879)</div><div class="line">2017-05-07 23:43:23.145  INFO 19130 --- [       Thread-1] s.c.a.AnnotationConfigApplicationContext : Closing org.springframework.context.annotation.AnnotationConfigApplicationContext@7863cfc6: startup date [Sun May 07 23:43:21 CST 2017]; root of context hierarchy</div><div class="line">2017-05-07 23:43:23.146  INFO 19130 --- [       Thread-1] o.s.j.e.a.AnnotationMBeanExporter        : Unregistering JMX-exposed beans on shutdown</div></pre></td></tr></table></figure>
@@ -409,22 +407,18 @@
 <blockquote>
 <p>注：这里补充一点，我一开始用brew安装的maven，结果不知道怎么与eclipse集成，于是卸载了。然后手动从官网上重新下载了一个。</p>
 </blockquote>
-<h1 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h1><p>##教训与经验</p>
-<p>哎，本来挺简单的东东，结果搞了这么长时间，太惭愧了！！从这个感受上来说，Spring-boot还是不够好。不够好的重要原因：</p>
+<h1 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h1><h2 id="经验教训"><a href="#经验教训" class="headerlink" title="经验教训"></a>经验教训</h2><p>哎，本来挺简单的东东，结果搞了这么长时间，太惭愧了！！从这个感受上来说，Spring-boot还是不够好。不够好的重要原因：</p>
 <ol>
 <li>maven虽然帮助我们管理了各种包的依赖，解决了工程中这个让人头疼的问题，但是因为各种私有中央仓库质量良莠不齐，可能会导致无法很好的解释依赖关系或下载到正确的jar包（也许GAV是对的，但是JAR包内容有问题），这就使得Spring-boot背后那么庞大的一组JAR包和maven-plugin插件不能正常的下载下来使用——这一点以后有时间了好好观察证明一下；</li>
 <li>自己的疏忽大意，没有在事前准备好自己的工具，结果出现了这么多不期而遇的异常，而且这些异常均与Spring-boot的基础常识相违背，让人摸不着头脑，能够查阅后直接得到结果的资料也很少。</li>
 </ol>
-<p>需要改进的地方：</p>
-<ol>
+<h2 id="需要改进的地方"><a href="#需要改进的地方" class="headerlink" title="需要改进的地方"></a>需要改进的地方</h2><ol>
 <li>以后遇到这种违背常理的异常，应该立即从异常本身入手，追根溯源，不能反复做无谓的尝试，不能期望一下子解决问题；</li>
 <li>注意查看依赖关系、注意版本号、注意分析源代码、注意少用百度（哎，看来真的不能用百度了，要好好学习英语了）</li>
 </ol>
-<p>##关于Spring-boot</p>
-<p>其实会过来只看spring-boot本身，根据如上的示例你会感受到：通过spring-boot开发一个web应用还是十分便捷的：1. 配置文件少，配置量非常少； 2. 所编写的代码少，且直接关注核心业务；3. 不需要关注web容器的部署细节。而这些便捷之处都由spring-boot帮你做了！</p>
+<h2 id="关于Spring-boot"><a href="#关于Spring-boot" class="headerlink" title="关于Spring-boot"></a>关于Spring-boot</h2><p>其实会过来只看spring-boot本身，根据如上的示例你会感受到：通过spring-boot开发一个web应用还是十分便捷的：1. 配置文件少，配置量非常少； 2. 所编写的代码少，且直接关注核心业务；3. 不需要关注web容器的部署细节。而这些便捷之处都由spring-boot帮你做了！</p>
 <p>同样要实现一个如上示例的RESTFull的Service接口，哪怕是用另一个非常简单的组合tomcat+cxf或tomcat+struct2，从代码量、配质量、配置工作这几个角度来讲，都要增加不少工作量。如果中间像我一样遇到了各种因为环境、依赖包、中央仓库等工具链的问题，可能会更加麻烦。</p>
-<p>##接下来</p>
-<p>接下来，看看SpringBoot怎么集成JSP以及RESTFull 的Service。</p>
+<h2 id="接下来"><a href="#接下来" class="headerlink" title="接下来"></a>接下来</h2><p>接下来，看看SpringBoot怎么集成JSP以及RESTFull 的Service。</p>
 
       
     </div>
@@ -597,7 +591,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#准备"><span class="nav-number">2.</span> <span class="nav-text">准备</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#2-需要准备的概念"><span class="nav-number">2.1.</span> <span class="nav-text">2. 需要准备的概念</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#开始"><span class="nav-number">3.</span> <span class="nav-text">开始</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#步骤1-配置Eclipse与Maven"><span class="nav-number">3.1.</span> <span class="nav-text">步骤1 配置Eclipse与Maven</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#步骤2-创建Maven工程并配置POM文件"><span class="nav-number">3.2.</span> <span class="nav-text">步骤2 创建Maven工程并配置POM文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#步骤3-添加样例类"><span class="nav-number">3.3.</span> <span class="nav-text">步骤3 添加样例类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#步骤4-跑起来"><span class="nav-number">3.4.</span> <span class="nav-text">步骤4 跑起来</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-Spring-Boot-莫名的shutdown"><span class="nav-number">3.5.</span> <span class="nav-text">2. Spring-Boot 莫名的shutdown</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#结语"><span class="nav-number">4.</span> <span class="nav-text">结语</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#准备"><span class="nav-number">2.</span> <span class="nav-text">准备</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-需要准备的工具："><span class="nav-number">2.1.</span> <span class="nav-text">1. 需要准备的工具：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-需要准备的概念"><span class="nav-number">2.2.</span> <span class="nav-text">2. 需要准备的概念</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#开始"><span class="nav-number">3.</span> <span class="nav-text">开始</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#步骤1-配置Eclipse与Maven"><span class="nav-number">3.1.</span> <span class="nav-text">步骤1 配置Eclipse与Maven</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#步骤2-创建Maven工程并配置POM文件"><span class="nav-number">3.2.</span> <span class="nav-text">步骤2 创建Maven工程并配置POM文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#步骤3-添加样例类"><span class="nav-number">3.3.</span> <span class="nav-text">步骤3 添加样例类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#步骤4-跑起来"><span class="nav-number">3.4.</span> <span class="nav-text">步骤4 跑起来</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-初始化Log组件失败"><span class="nav-number">3.5.</span> <span class="nav-text">1. 初始化Log组件失败</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-Spring-Boot-莫名的shutdown"><span class="nav-number">3.6.</span> <span class="nav-text">2. Spring-Boot 莫名的shutdown</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#结语"><span class="nav-number">4.</span> <span class="nav-text">结语</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#经验教训"><span class="nav-number">4.1.</span> <span class="nav-text">经验教训</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#需要改进的地方"><span class="nav-number">4.2.</span> <span class="nav-text">需要改进的地方</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#关于Spring-boot"><span class="nav-number">4.3.</span> <span class="nav-text">关于Spring-boot</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#接下来"><span class="nav-number">4.4.</span> <span class="nav-text">接下来</span></a></li></ol></li></ol></div>
             
 
           </div>
