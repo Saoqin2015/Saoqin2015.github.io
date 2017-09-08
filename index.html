@@ -198,7 +198,7 @@
             
               <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
             
-            Home
+            Startseite
           </a>
         </li>
       
@@ -221,6 +221,175 @@
           <div id="content" class="content">
             
   <section id="posts" class="posts-expand">
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/09/05/String的split与StringUtils的delimitedListToStringArray/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="来自魔法世界的王新华">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Tech Art">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/09/05/String的split与StringUtils的delimitedListToStringArray/" itemprop="url">String的split与StringUtils的delimitedListToStringArray</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Veröffentlicht am</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-09-05T23:54:00+08:00">
+                2017-09-05
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="一个疑问"><a href="#一个疑问" class="headerlink" title="一个疑问"></a>一个疑问</h1><p>在阅读SpringBoot的源码时发现，其中使用了一个StringUtils的delimitedListToStringArray静态方法将一个字符串按照指定分隔符分割为一个字符串数组。这让我突然有一个疑问，String对象是有split方法的，为何还要再创造一个方法？于是禁不住要对比一下这两个不同的实现。</p>
+<h1 id="源码分析"><a href="#源码分析" class="headerlink" title="源码分析"></a>源码分析</h1><h2 id="1-Split-源码浅析"><a href="#1-Split-源码浅析" class="headerlink" title="1. Split 源码浅析"></a>1. Split 源码浅析</h2><h3 id="源码"><a href="#源码" class="headerlink" title="源码"></a>源码</h3><p>先引用一下完整的源码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> String[] split(String regex, <span class="keyword">int</span> limit) &#123;</div><div class="line">  <span class="comment">/* fastpath if the regex is a</span></div><div class="line"><span class="comment">         (1)one-char String and this character is not one of the</span></div><div class="line"><span class="comment">            RegEx's meta characters ".$|()[&#123;^?*+\\", or</span></div><div class="line"><span class="comment">         (2)two-char String and the first char is the backslash and</span></div><div class="line"><span class="comment">            the second is not the ascii digit or ascii letter.</span></div><div class="line"><span class="comment">         */</span></div><div class="line">  <span class="keyword">char</span> ch = <span class="number">0</span>;</div><div class="line">  <span class="keyword">if</span> (((regex.value.length == <span class="number">1</span> &amp;&amp;</div><div class="line">        <span class="string">".$|()[&#123;^?*+\\"</span>.indexOf(ch = regex.charAt(<span class="number">0</span>)) == -<span class="number">1</span>) ||</div><div class="line">       (regex.length() == <span class="number">2</span> &amp;&amp;</div><div class="line">        regex.charAt(<span class="number">0</span>) == <span class="string">'\\'</span> &amp;&amp;</div><div class="line">        (((ch = regex.charAt(<span class="number">1</span>))-<span class="string">'0'</span>)|(<span class="string">'9'</span>-ch)) &lt; <span class="number">0</span> &amp;&amp;</div><div class="line">        ((ch-<span class="string">'a'</span>)|(<span class="string">'z'</span>-ch)) &lt; <span class="number">0</span> &amp;&amp;</div><div class="line">        ((ch-<span class="string">'A'</span>)|(<span class="string">'Z'</span>-ch)) &lt; <span class="number">0</span>)) &amp;&amp;</div><div class="line">      (ch &lt; Character.MIN_HIGH_SURROGATE ||</div><div class="line">       ch &gt; Character.MAX_LOW_SURROGATE))</div><div class="line">  &#123;</div><div class="line">    <span class="keyword">int</span> off = <span class="number">0</span>;</div><div class="line">    <span class="keyword">int</span> next = <span class="number">0</span>;</div><div class="line">    <span class="keyword">boolean</span> limited = limit &gt; <span class="number">0</span>;</div><div class="line">    ArrayList&lt;String&gt; list = <span class="keyword">new</span> ArrayList&lt;&gt;();</div><div class="line">    <span class="keyword">while</span> ((next = indexOf(ch, off)) != -<span class="number">1</span>) &#123;</div><div class="line">      <span class="keyword">if</span> (!limited || list.size() &lt; limit - <span class="number">1</span>) &#123;</div><div class="line">        list.add(substring(off, next));</div><div class="line">        off = next + <span class="number">1</span>;</div><div class="line">      &#125; <span class="keyword">else</span> &#123;    <span class="comment">// last one</span></div><div class="line">        <span class="comment">//assert (list.size() == limit - 1);</span></div><div class="line">        list.add(substring(off, value.length));</div><div class="line">        off = value.length;</div><div class="line">        <span class="keyword">break</span>;</div><div class="line">      &#125;</div><div class="line">    &#125;</div><div class="line">    <span class="comment">// If no match was found, return this</span></div><div class="line">    <span class="keyword">if</span> (off == <span class="number">0</span>)</div><div class="line">      <span class="keyword">return</span> <span class="keyword">new</span> String[]&#123;<span class="keyword">this</span>&#125;;</div><div class="line"></div><div class="line">    <span class="comment">// Add remaining segment</span></div><div class="line">    <span class="keyword">if</span> (!limited || list.size() &lt; limit)</div><div class="line">      list.add(substring(off, value.length));</div><div class="line"></div><div class="line">    <span class="comment">// Construct result</span></div><div class="line">    <span class="keyword">int</span> resultSize = list.size();</div><div class="line">    <span class="keyword">if</span> (limit == <span class="number">0</span>) &#123;</div><div class="line">      <span class="keyword">while</span> (resultSize &gt; <span class="number">0</span> &amp;&amp; list.get(resultSize - <span class="number">1</span>).length() == <span class="number">0</span>) &#123;</div><div class="line">        resultSize--;</div><div class="line">      &#125;</div><div class="line">    &#125;</div><div class="line">    String[] result = <span class="keyword">new</span> String[resultSize];</div><div class="line">    <span class="keyword">return</span> list.subList(<span class="number">0</span>, resultSize).toArray(result);</div><div class="line">  &#125;</div><div class="line">  <span class="keyword">return</span> Pattern.compile(regex).split(<span class="keyword">this</span>, limit);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="分析总结"><a href="#分析总结" class="headerlink" title="分析总结"></a>分析总结</h3><ol>
+<li>split 方法是支持正则表达式方式分割的，如果提供的入参regex长度大于1，或包含正则表达式特殊字符，则统一按照正则表达式方式处理；这里想要讨论的是非正则表达式的处理；</li>
+<li>拥有一个limit参数用来限制返回的数组大小的最大值；</li>
+<li>遍历字符串时并非逐字符遍历，而使用了off与next两个下标变量标志上一个找到的指定字符起始位置和当前找到的指定字符位置；</li>
+<li>代码中用来判断是否是字母与数字字符的方式挺巧妙<code>(ch - &#39;a&#39;)|(&#39;z&#39; - ch) &lt; 0</code> ，若不在范围内，则符号为一定为1，那么就是负数；这样判断的方式比普通的写两个条件表达式的方式减少了一次条件判断的运算，相对来说执行效率会高一点点；</li>
+<li>方法中使用了ArrayList来缓存分割的结果，在最后使用toArray()方法将其转换为了数组。</li>
+</ol>
+<h2 id="2-StringUtils-delimitedListToStringArray源码浅析"><a href="#2-StringUtils-delimitedListToStringArray源码浅析" class="headerlink" title="2. StringUtils.delimitedListToStringArray源码浅析"></a>2. StringUtils.delimitedListToStringArray源码浅析</h2><h3 id="源码-1"><a href="#源码-1" class="headerlink" title="源码"></a>源码</h3><p>先引用一下源代码</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> String[] delimitedListToStringArray(String str, String delimiter, String charsToDelete) &#123;</div><div class="line">  <span class="keyword">if</span> (str == <span class="keyword">null</span>) &#123;</div><div class="line">    <span class="keyword">return</span> <span class="keyword">new</span> String[<span class="number">0</span>];</div><div class="line">  &#125;</div><div class="line">  <span class="keyword">if</span> (delimiter == <span class="keyword">null</span>) &#123;</div><div class="line">    <span class="keyword">return</span> <span class="keyword">new</span> String[] &#123;str&#125;;</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  List&lt;String&gt; result = <span class="keyword">new</span> ArrayList&lt;String&gt;();</div><div class="line">  <span class="keyword">if</span> (<span class="string">""</span>.equals(delimiter)) &#123;</div><div class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; str.length(); i++) &#123;</div><div class="line">      result.add(deleteAny(str.substring(i, i + <span class="number">1</span>), charsToDelete));</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">  <span class="keyword">else</span> &#123;</div><div class="line">    <span class="keyword">int</span> pos = <span class="number">0</span>;</div><div class="line">    <span class="keyword">int</span> delPos;</div><div class="line">    <span class="keyword">while</span> ((delPos = str.indexOf(delimiter, pos)) != -<span class="number">1</span>) &#123;</div><div class="line">      result.add(deleteAny(str.substring(pos, delPos), charsToDelete));</div><div class="line">      pos = delPos + delimiter.length();</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">if</span> (str.length() &gt; <span class="number">0</span> &amp;&amp; pos &lt;= str.length()) &#123;</div><div class="line">      <span class="comment">// Add rest of String, but not in case of empty input.</span></div><div class="line">      result.add(deleteAny(str.substring(pos), charsToDelete));</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">  <span class="keyword">return</span> toStringArray(result);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="分析总结-1"><a href="#分析总结-1" class="headerlink" title="分析总结"></a>分析总结</h3><ol>
+<li>基本算法与split是一致的，使用了pos和delPos标志了遍历字符串时<strong>当前</strong>找到的目标字符串位置和找到的<strong>下一个</strong>目标字符串，并用其分割了字符串；</li>
+<li>delimitedListToStringArray方法不支持正则表达式方式的分割；</li>
+<li>提供了一个辅助功能：可以通过charsToDelete将分割出来的结果中的目标字符串删除；</li>
+<li>与split方法一样，用ArrayList缓存了分割结果，并在最后将其转换为数组；</li>
+<li>没有提供limit限制；</li>
+</ol>
+<h2 id="3-总结对比"><a href="#3-总结对比" class="headerlink" title="3. 总结对比"></a>3. 总结对比</h2><table>
+<thead>
+<tr>
+<th>对比项目</th>
+<th>split</th>
+<th>delimitedListToStringArray</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>算法</td>
+<td>indexOf 与 substring（只针对单字符）</td>
+<td>indexOf 与 substring</td>
+</tr>
+<tr>
+<td>正则表达式</td>
+<td>是</td>
+<td>否</td>
+</tr>
+<tr>
+<td>limit限制</td>
+<td>是</td>
+<td>否</td>
+</tr>
+<tr>
+<td>删除指定字符串</td>
+<td>否</td>
+<td>是</td>
+</tr>
+</tbody>
+</table>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
     
       
 
@@ -264,7 +433,7 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">Posted on</span>
+                <span class="post-meta-item-text">Veröffentlicht am</span>
               
               <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-08-27T23:48:19+08:00">
                 2017-08-27
@@ -285,7 +454,7 @@
                 <i class="fa fa-folder-o"></i>
               </span>
               
-                <span class="post-meta-item-text">In</span>
+                <span class="post-meta-item-text">in</span>
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
@@ -495,7 +664,7 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">Posted on</span>
+                <span class="post-meta-item-text">Veröffentlicht am</span>
               
               <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-08-27T23:29:01+08:00">
                 2017-08-27
@@ -516,7 +685,7 @@
                 <i class="fa fa-folder-o"></i>
               </span>
               
-                <span class="post-meta-item-text">In</span>
+                <span class="post-meta-item-text">in</span>
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
@@ -665,7 +834,7 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">Posted on</span>
+                <span class="post-meta-item-text">Veröffentlicht am</span>
               
               <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-08-25T22:16:47+08:00">
                 2017-08-25
@@ -686,7 +855,7 @@
                 <i class="fa fa-folder-o"></i>
               </span>
               
-                <span class="post-meta-item-text">In</span>
+                <span class="post-meta-item-text">in</span>
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
@@ -927,7 +1096,7 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">Posted on</span>
+                <span class="post-meta-item-text">Veröffentlicht am</span>
               
               <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-08-25T00:27:29+08:00">
                 2017-08-25
@@ -948,7 +1117,7 @@
                 <i class="fa fa-folder-o"></i>
               </span>
               
-                <span class="post-meta-item-text">In</span>
+                <span class="post-meta-item-text">in</span>
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
@@ -1086,7 +1255,7 @@ gitment.render('container')
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">Posted on</span>
+                <span class="post-meta-item-text">Veröffentlicht am</span>
               
               <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-08-25T00:11:21+08:00">
                 2017-08-25
@@ -1220,8 +1389,8 @@ gitment.render('container')
             
               <a href="/archives">
             
-                <span class="site-state-item-count">5</span>
-                <span class="site-state-item-name">posts</span>
+                <span class="site-state-item-count">6</span>
+                <span class="site-state-item-name">Artikel</span>
               </a>
             </div>
           
@@ -1232,7 +1401,7 @@ gitment.render('container')
             <div class="site-state-item site-state-categories">
               
                 <span class="site-state-item-count">4</span>
-                <span class="site-state-item-name">categories</span>
+                <span class="site-state-item-name">Kategorien</span>
               
             </div>
           
@@ -1243,7 +1412,7 @@ gitment.render('container')
             <div class="site-state-item site-state-tags">
               
                 <span class="site-state-item-count">6</span>
-                <span class="site-state-item-name">tags</span>
+                <span class="site-state-item-name">Tags</span>
               
             </div>
           
@@ -1294,7 +1463,7 @@ gitment.render('container')
 </div>
 
 
-  <div class="powered-by">Powered by <a class="theme-link" href="https://hexo.io">Hexo</a></div>
+  <div class="powered-by">Erstellt mit  <a class="theme-link" href="https://hexo.io">Hexo</a></div>
 
   <span class="post-meta-divider">|</span>
 

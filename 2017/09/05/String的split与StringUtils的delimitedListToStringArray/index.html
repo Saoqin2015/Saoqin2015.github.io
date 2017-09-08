@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="一个疑问在阅读SpringBoot的源码时发现，其中使用了一个StringUtils的delimitedListToStringArray静态方法将一个字符串按照指定分隔符分割为一个字符串数组。这让我突然有一个疑问，String对象是有split方法的，为何还要再创造一个方法？于是禁不住要对比一下这两个不同的实现。 源码分析1. Split 源码浅析源码先引用一下完整的源码： 1234567891">
+<meta property="og:type" content="article">
+<meta property="og:title" content="String的split与StringUtils的delimitedListToStringArray">
+<meta property="og:url" content="http://yoursite.com/2017/09/05/String的split与StringUtils的delimitedListToStringArray/index.html">
+<meta property="og:site_name" content="Tech Art">
+<meta property="og:description" content="一个疑问在阅读SpringBoot的源码时发现，其中使用了一个StringUtils的delimitedListToStringArray静态方法将一个字符串按照指定分隔符分割为一个字符串数组。这让我突然有一个疑问，String对象是有split方法的，为何还要再创造一个方法？于是禁不住要对比一下这两个不同的实现。 源码分析1. Split 源码浅析源码先引用一下完整的源码： 1234567891">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2017-09-08T13:21:49.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="String的split与StringUtils的delimitedListToStringArray">
+<meta name="twitter:description" content="一个疑问在阅读SpringBoot的源码时发现，其中使用了一个StringUtils的delimitedListToStringArray静态方法将一个字符串按照指定分隔符分割为一个字符串数组。这让我突然有一个疑问，String对象是有split方法的，为何还要再创造一个方法？于是禁不住要对比一下这两个不同的实现。 源码分析1. Split 源码浅析源码先引用一下完整的源码： 1234567891">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.2',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/09/05/String的split与StringUtils的delimitedListToStringArray/"/>
+
+
+
+
+
+  <title>String的split与StringUtils的delimitedListToStringArray | Tech Art</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Tech Art</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Talk is cheep, show me the code.</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Startseite
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/09/05/String的split与StringUtils的delimitedListToStringArray/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="来自魔法世界的王新华">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Tech Art">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">String的split与StringUtils的delimitedListToStringArray</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Veröffentlicht am</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-09-05T23:54:00+08:00">
+                2017-09-05
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="一个疑问"><a href="#一个疑问" class="headerlink" title="一个疑问"></a>一个疑问</h1><p>在阅读SpringBoot的源码时发现，其中使用了一个StringUtils的delimitedListToStringArray静态方法将一个字符串按照指定分隔符分割为一个字符串数组。这让我突然有一个疑问，String对象是有split方法的，为何还要再创造一个方法？于是禁不住要对比一下这两个不同的实现。</p>
+<h1 id="源码分析"><a href="#源码分析" class="headerlink" title="源码分析"></a>源码分析</h1><h2 id="1-Split-源码浅析"><a href="#1-Split-源码浅析" class="headerlink" title="1. Split 源码浅析"></a>1. Split 源码浅析</h2><h3 id="源码"><a href="#源码" class="headerlink" title="源码"></a>源码</h3><p>先引用一下完整的源码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> String[] split(String regex, <span class="keyword">int</span> limit) &#123;</div><div class="line">  <span class="comment">/* fastpath if the regex is a</span></div><div class="line"><span class="comment">         (1)one-char String and this character is not one of the</span></div><div class="line"><span class="comment">            RegEx's meta characters ".$|()[&#123;^?*+\\", or</span></div><div class="line"><span class="comment">         (2)two-char String and the first char is the backslash and</span></div><div class="line"><span class="comment">            the second is not the ascii digit or ascii letter.</span></div><div class="line"><span class="comment">         */</span></div><div class="line">  <span class="keyword">char</span> ch = <span class="number">0</span>;</div><div class="line">  <span class="keyword">if</span> (((regex.value.length == <span class="number">1</span> &amp;&amp;</div><div class="line">        <span class="string">".$|()[&#123;^?*+\\"</span>.indexOf(ch = regex.charAt(<span class="number">0</span>)) == -<span class="number">1</span>) ||</div><div class="line">       (regex.length() == <span class="number">2</span> &amp;&amp;</div><div class="line">        regex.charAt(<span class="number">0</span>) == <span class="string">'\\'</span> &amp;&amp;</div><div class="line">        (((ch = regex.charAt(<span class="number">1</span>))-<span class="string">'0'</span>)|(<span class="string">'9'</span>-ch)) &lt; <span class="number">0</span> &amp;&amp;</div><div class="line">        ((ch-<span class="string">'a'</span>)|(<span class="string">'z'</span>-ch)) &lt; <span class="number">0</span> &amp;&amp;</div><div class="line">        ((ch-<span class="string">'A'</span>)|(<span class="string">'Z'</span>-ch)) &lt; <span class="number">0</span>)) &amp;&amp;</div><div class="line">      (ch &lt; Character.MIN_HIGH_SURROGATE ||</div><div class="line">       ch &gt; Character.MAX_LOW_SURROGATE))</div><div class="line">  &#123;</div><div class="line">    <span class="keyword">int</span> off = <span class="number">0</span>;</div><div class="line">    <span class="keyword">int</span> next = <span class="number">0</span>;</div><div class="line">    <span class="keyword">boolean</span> limited = limit &gt; <span class="number">0</span>;</div><div class="line">    ArrayList&lt;String&gt; list = <span class="keyword">new</span> ArrayList&lt;&gt;();</div><div class="line">    <span class="keyword">while</span> ((next = indexOf(ch, off)) != -<span class="number">1</span>) &#123;</div><div class="line">      <span class="keyword">if</span> (!limited || list.size() &lt; limit - <span class="number">1</span>) &#123;</div><div class="line">        list.add(substring(off, next));</div><div class="line">        off = next + <span class="number">1</span>;</div><div class="line">      &#125; <span class="keyword">else</span> &#123;    <span class="comment">// last one</span></div><div class="line">        <span class="comment">//assert (list.size() == limit - 1);</span></div><div class="line">        list.add(substring(off, value.length));</div><div class="line">        off = value.length;</div><div class="line">        <span class="keyword">break</span>;</div><div class="line">      &#125;</div><div class="line">    &#125;</div><div class="line">    <span class="comment">// If no match was found, return this</span></div><div class="line">    <span class="keyword">if</span> (off == <span class="number">0</span>)</div><div class="line">      <span class="keyword">return</span> <span class="keyword">new</span> String[]&#123;<span class="keyword">this</span>&#125;;</div><div class="line"></div><div class="line">    <span class="comment">// Add remaining segment</span></div><div class="line">    <span class="keyword">if</span> (!limited || list.size() &lt; limit)</div><div class="line">      list.add(substring(off, value.length));</div><div class="line"></div><div class="line">    <span class="comment">// Construct result</span></div><div class="line">    <span class="keyword">int</span> resultSize = list.size();</div><div class="line">    <span class="keyword">if</span> (limit == <span class="number">0</span>) &#123;</div><div class="line">      <span class="keyword">while</span> (resultSize &gt; <span class="number">0</span> &amp;&amp; list.get(resultSize - <span class="number">1</span>).length() == <span class="number">0</span>) &#123;</div><div class="line">        resultSize--;</div><div class="line">      &#125;</div><div class="line">    &#125;</div><div class="line">    String[] result = <span class="keyword">new</span> String[resultSize];</div><div class="line">    <span class="keyword">return</span> list.subList(<span class="number">0</span>, resultSize).toArray(result);</div><div class="line">  &#125;</div><div class="line">  <span class="keyword">return</span> Pattern.compile(regex).split(<span class="keyword">this</span>, limit);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="分析总结"><a href="#分析总结" class="headerlink" title="分析总结"></a>分析总结</h3><ol>
+<li>split 方法是支持正则表达式方式分割的，如果提供的入参regex长度大于1，或包含正则表达式特殊字符，则统一按照正则表达式方式处理；这里想要讨论的是非正则表达式的处理；</li>
+<li>拥有一个limit参数用来限制返回的数组大小的最大值；</li>
+<li>遍历字符串时并非逐字符遍历，而使用了off与next两个下标变量标志上一个找到的指定字符起始位置和当前找到的指定字符位置；</li>
+<li>代码中用来判断是否是字母与数字字符的方式挺巧妙<code>(ch - &#39;a&#39;)|(&#39;z&#39; - ch) &lt; 0</code> ，若不在范围内，则符号为一定为1，那么就是负数；这样判断的方式比普通的写两个条件表达式的方式减少了一次条件判断的运算，相对来说执行效率会高一点点；</li>
+<li>方法中使用了ArrayList来缓存分割的结果，在最后使用toArray()方法将其转换为了数组。</li>
+</ol>
+<h2 id="2-StringUtils-delimitedListToStringArray源码浅析"><a href="#2-StringUtils-delimitedListToStringArray源码浅析" class="headerlink" title="2. StringUtils.delimitedListToStringArray源码浅析"></a>2. StringUtils.delimitedListToStringArray源码浅析</h2><h3 id="源码-1"><a href="#源码-1" class="headerlink" title="源码"></a>源码</h3><p>先引用一下源代码</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> String[] delimitedListToStringArray(String str, String delimiter, String charsToDelete) &#123;</div><div class="line">  <span class="keyword">if</span> (str == <span class="keyword">null</span>) &#123;</div><div class="line">    <span class="keyword">return</span> <span class="keyword">new</span> String[<span class="number">0</span>];</div><div class="line">  &#125;</div><div class="line">  <span class="keyword">if</span> (delimiter == <span class="keyword">null</span>) &#123;</div><div class="line">    <span class="keyword">return</span> <span class="keyword">new</span> String[] &#123;str&#125;;</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  List&lt;String&gt; result = <span class="keyword">new</span> ArrayList&lt;String&gt;();</div><div class="line">  <span class="keyword">if</span> (<span class="string">""</span>.equals(delimiter)) &#123;</div><div class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; str.length(); i++) &#123;</div><div class="line">      result.add(deleteAny(str.substring(i, i + <span class="number">1</span>), charsToDelete));</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">  <span class="keyword">else</span> &#123;</div><div class="line">    <span class="keyword">int</span> pos = <span class="number">0</span>;</div><div class="line">    <span class="keyword">int</span> delPos;</div><div class="line">    <span class="keyword">while</span> ((delPos = str.indexOf(delimiter, pos)) != -<span class="number">1</span>) &#123;</div><div class="line">      result.add(deleteAny(str.substring(pos, delPos), charsToDelete));</div><div class="line">      pos = delPos + delimiter.length();</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">if</span> (str.length() &gt; <span class="number">0</span> &amp;&amp; pos &lt;= str.length()) &#123;</div><div class="line">      <span class="comment">// Add rest of String, but not in case of empty input.</span></div><div class="line">      result.add(deleteAny(str.substring(pos), charsToDelete));</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">  <span class="keyword">return</span> toStringArray(result);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="分析总结-1"><a href="#分析总结-1" class="headerlink" title="分析总结"></a>分析总结</h3><ol>
+<li>基本算法与split是一致的，使用了pos和delPos标志了遍历字符串时<strong>当前</strong>找到的目标字符串位置和找到的<strong>下一个</strong>目标字符串，并用其分割了字符串；</li>
+<li>delimitedListToStringArray方法不支持正则表达式方式的分割；</li>
+<li>提供了一个辅助功能：可以通过charsToDelete将分割出来的结果中的目标字符串删除；</li>
+<li>与split方法一样，用ArrayList缓存了分割结果，并在最后将其转换为数组；</li>
+<li>没有提供limit限制；</li>
+</ol>
+<h2 id="3-总结对比"><a href="#3-总结对比" class="headerlink" title="3. 总结对比"></a>3. 总结对比</h2><table>
+<thead>
+<tr>
+<th>对比项目</th>
+<th>split</th>
+<th>delimitedListToStringArray</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>算法</td>
+<td>indexOf 与 substring（只针对单字符）</td>
+<td>indexOf 与 substring</td>
+</tr>
+<tr>
+<td>正则表达式</td>
+<td>是</td>
+<td>否</td>
+</tr>
+<tr>
+<td>limit限制</td>
+<td>是</td>
+<td>否</td>
+</tr>
+<tr>
+<td>删除指定字符串</td>
+<td>否</td>
+<td>是</td>
+</tr>
+</tbody>
+</table>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/08/27/SpringBoot【1】-Hello-Springboot/" rel="next" title="SpringBoot【1】--Hello Springboot">
+                <i class="fa fa-chevron-left"></i> SpringBoot【1】--Hello Springboot
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+       	    
+                <div id="gitment-container"></div>
+            
+        
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Inhaltsverzeichnis
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Übersicht
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="来自魔法世界的王新华" />
+          <p class="site-author-name" itemprop="name">来自魔法世界的王新华</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+            
+              <a href="/archives">
+            
+                <span class="site-state-item-count">6</span>
+                <span class="site-state-item-name">Artikel</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">4</span>
+                <span class="site-state-item-name">Kategorien</span>
+              
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              
+                <span class="site-state-item-count">6</span>
+                <span class="site-state-item-name">Tags</span>
+              
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#一个疑问"><span class="nav-number">1.</span> <span class="nav-text">一个疑问</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#源码分析"><span class="nav-number">2.</span> <span class="nav-text">源码分析</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-Split-源码浅析"><span class="nav-number">2.1.</span> <span class="nav-text">1. Split 源码浅析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#源码"><span class="nav-number">2.1.1.</span> <span class="nav-text">源码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#分析总结"><span class="nav-number">2.1.2.</span> <span class="nav-text">分析总结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-StringUtils-delimitedListToStringArray源码浅析"><span class="nav-number">2.2.</span> <span class="nav-text">2. StringUtils.delimitedListToStringArray源码浅析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#源码-1"><span class="nav-number">2.2.1.</span> <span class="nav-text">源码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#分析总结-1"><span class="nav-number">2.2.2.</span> <span class="nav-text">分析总结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-总结对比"><span class="nav-number">2.3.</span> <span class="nav-text">3. 总结对比</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">来自魔法世界的王新华</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Erstellt mit  <a class="theme-link" href="https://hexo.io">Hexo</a></div>
+
+  <span class="post-meta-divider">|</span>
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.2</div>
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+   
+   
+   
+   
+   <link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">
+   <script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script>
+   
+       <script type="text/javascript">
+           var gitment = new Gitment({
+              id: document.location.href, 
+               owner: 'Saoqin2015',
+               repo: 'saoqin2015.github.io',
+               oauth: {
+                   client_id: '815ca2443286d18029af',
+                   client_secret: '163013f1d716ba0d19aaac45a65df5474e7936e5',
+               }});
+           gitment.render('gitment-container');
+       </script>
+   
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
